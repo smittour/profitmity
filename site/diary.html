@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru" data-page="diary">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Дневник · ProFitMITY</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="diary-page">
+  <header class="top no-print">
+    <div class="wrap wrap-wide top-inner">
+      <a class="brand sans" href="index.html">ProFitMITY</a>
+      <div class="top-right">
+        <nav class="nav sans">
+          <a href="index.html#calc" data-i18n="nav.numbers">Цифры</a>
+          <a href="diary.html" aria-current="page" data-i18n="nav.diary">Дневник</a>
+          <a href="analytics.html" data-i18n="nav.analytics">Аналитика</a>
+        </nav>
+        <div class="lang-switch sans" role="group" aria-label="Language">
+          <button type="button" data-lang="ru">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap wrap-wide" id="app">
+    <section class="hero diary-hero">
+      <p class="kicker sans" data-i18n="diary.kicker">Дневник</p>
+      <h1 data-i18n="diary.h1">Тренировки, еда и как вы себя чувствуете</h1>
+      <p class="lead" data-i18n="diary.lead">Две минуты в день с телефона. Графики — во вкладке «Аналитика», она собирается сама.</p>
+      <p class="privacy-note sans" data-i18n="diary.privacy">Данные конфиденциальны: они остаются только на этом телефоне, мы их не видим и никуда не отправляем.</p>
+    </section>
+
+    <p class="callout sans" id="demo-banner" data-i18n="diary.demo">На экране пример двух недель. Нажмите «Начать со своих оценок» — и графики станут вашими. Пример никуда не уходит; ваши записи тоже остаются только у вас.</p>
+
+    <nav class="diary-tabs two sans" role="tablist">
+      <button type="button" role="tab" data-tab="today" aria-selected="true" data-i18n="diary.tabToday">Сегодня</button>
+      <button type="button" role="tab" data-tab="log" aria-selected="false" data-i18n="diary.tabLog">Журнал</button>
+    </nav>
+
+    <section id="tab-today" class="tab-panel" data-panel="today">
+      <form id="day-form" class="day-form" autocomplete="off">
+        <div class="day-nav sans">
+          <button type="button" id="day-prev" aria-label="Previous day">‹</button>
+          <label class="day-nav-center">
+            <strong id="day-label">Сегодня</strong>
+            <input name="date" type="date" required>
+          </label>
+          <button type="button" id="day-next" aria-label="Next day">›</button>
+        </div>
+
+        <article class="log-card" id="card-train">
+          <h3 data-i18n="diary.trainTitle">Тренировка</h3>
+          <div class="seg log-seg" data-name="trainStatus">
+            <button type="button" data-value="done" aria-pressed="true" data-i18n="train.done">Сделал</button>
+            <button type="button" data-value="skipped" aria-pressed="false" data-i18n="train.skipped">Пропустил</button>
+            <button type="button" data-value="rest" aria-pressed="false" data-i18n="train.rest">Отдых</button>
+          </div>
+          <div id="train-details">
+            <p class="field-label" data-i18n="train.session">Сессия</p>
+            <div class="seg log-seg" data-name="session">
+              <button type="button" data-value="a" aria-pressed="true" data-i18n="train.a">А · жим</button>
+              <button type="button" data-value="b" aria-pressed="false" data-i18n="train.b">Б · тяга</button>
+              <button type="button" data-value="c" aria-pressed="false" data-i18n="train.c">В · ноги</button>
+            </div>
+            <p class="field-label" data-i18n="train.effort">Как прошло</p>
+            <div class="seg log-seg" data-name="effort">
+              <button type="button" data-value="easy" aria-pressed="false" data-i18n="train.easy">Легко</button>
+              <button type="button" data-value="ok" aria-pressed="true" data-i18n="train.ok">Норма</button>
+              <button type="button" data-value="hard" aria-pressed="false" data-i18n="train.hard">Тяжело</button>
+            </div>
+            <label class="field"><span data-i18n="train.note">Заметка к залу</span>
+              <input name="trainNote" type="text" maxlength="140" data-i18n-placeholder="train.notePh" placeholder="вес, замена, колено…">
+            </label>
+          </div>
+        </article>
+
+        <article class="log-card" id="card-food">
+          <h3 data-i18n="diary.foodTitle">Питание</h3>
+          <p class="target-line sans" id="food-target"></p>
+          <p class="field-label" data-i18n="food.kcalHit">Калории к цели</p>
+          <div class="seg log-seg" data-name="foodHit">
+            <button type="button" data-value="under" aria-pressed="false" data-i18n="food.under">Меньше</button>
+            <button type="button" data-value="on" aria-pressed="true" data-i18n="food.on">В цель</button>
+            <button type="button" data-value="over" aria-pressed="false" data-i18n="food.over">Больше</button>
+          </div>
+          <p class="field-label" data-i18n="food.proteinHit">Белок</p>
+          <div class="seg log-seg" data-name="proteinHit">
+            <button type="button" data-value="yes" aria-pressed="true" data-i18n="food.proteinYes">Добрал</button>
+            <button type="button" data-value="no" aria-pressed="false" data-i18n="food.proteinNo">Не добрал</button>
+          </div>
+          <div class="grid-2">
+            <label class="field"><span data-i18n="food.kcal">Ккал, если знаете</span>
+              <input name="kcal" type="number" inputmode="numeric" min="0" max="6000" data-i18n-placeholder="food.kcalPh" placeholder="2100">
+            </label>
+            <label class="field"><span data-i18n="food.protein">Белок, г</span>
+              <input name="proteinG" type="number" inputmode="numeric" min="0" max="400" placeholder="110">
+            </label>
+          </div>
+          <label class="field"><span data-i18n="food.note">Заметка к еде</span>
+            <input name="foodNote" type="text" maxlength="140" data-i18n-placeholder="food.notePh" placeholder="warung, поздний ужин…">
+          </label>
+        </article>
+
+        <article class="log-card" id="card-weight">
+          <h3 data-i18n="diary.weightTitle">Вес утром</h3>
+          <p class="muted sans" data-i18n="diary.weightHint">Раз в неделю, натощак. В остальные дни можно не заполнять.</p>
+          <label class="field"><span data-i18n="diary.weight">кг</span>
+            <input name="kg" type="number" inputmode="decimal" min="40" max="220" step="0.1" data-i18n-placeholder="diary.weightPh" placeholder="80.2">
+          </label>
+        </article>
+
+        <article class="log-card no-print" id="card-foods">
+          <h3 data-i18n="food.lookup">Справочник ккал</h3>
+          <p class="muted sans" data-i18n="food.lookupHint">Название откроет белок, жир и углеводы. «+» добавит порцию в день, «Убрать» — снимет её.</p>
+          <label class="field"><span data-i18n="food.lookupFind">Продукт</span>
+            <input id="food-q" type="search" enterkeyhint="search" data-i18n-placeholder="food.lookupPh" placeholder="рис, курица, nasi goreng…">
+          </label>
+          <div class="seg log-seg" id="food-cats"></div>
+          <div id="food-results" class="food-results"></div>
+          <p class="target-line sans" id="food-plate"></p>
+        </article>
+
+        <article class="log-card" id="card-scores">
+          <h3 data-i18n="diary.scoresTitle">Самочувствие, 1–10</h3>
+          <p class="muted sans" data-i18n="diary.scoresHint">Четыре оценки хватит. Остальные — если есть минута.</p>
+          <div id="score-core"></div>
+          <button type="button" class="btn ghost full" id="toggle-more" data-i18n="diary.moreScores">Ещё оценки</button>
+          <div id="score-more" class="hidden"></div>
+        </article>
+
+        <div class="save-bar">
+          <button class="btn full" type="submit" data-i18n="diary.save">Сохранить день</button>
+          <a class="btn ghost full" href="analytics.html" data-i18n="diary.toAnalytics">К аналитике</a>
+          <button class="btn ghost full" type="button" id="clear-demo" data-i18n="diary.clear">Начать со своих оценок</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="tab-log" class="tab-panel hidden" data-panel="log">
+      <h2 data-i18n="diary.log">Журнал</h2>
+      <div id="log-cards" class="log-cards"></div>
+    </section>
+  </main>
+
+  <footer class="site wrap wrap-wide sans">
+    <p><a href="index.html" data-i18n="plan.back">← Калькулятор</a> · <a href="analytics.html" data-i18n="nav.analytics">Аналитика</a> · <a href="https://t.me/mityTour">@mityTour</a></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/foods.js"></script>
+  <script src="js/diary.js"></script>
+</body>
+</html>

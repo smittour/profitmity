@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru" data-page="analytics">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Аналитика · ProFitMITY</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="diary-page analytics-page">
+  <header class="top no-print">
+    <div class="wrap wrap-wide top-inner">
+      <a class="brand sans" href="index.html">ProFitMITY</a>
+      <div class="top-right">
+        <nav class="nav sans">
+          <a href="index.html#calc" data-i18n="nav.numbers">Цифры</a>
+          <a href="diary.html" data-i18n="nav.diary">Дневник</a>
+          <a href="analytics.html" aria-current="page" data-i18n="nav.analytics">Аналитика</a>
+        </nav>
+        <div class="lang-switch sans" role="group" aria-label="Language">
+          <button type="button" data-lang="ru">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap wrap-wide" id="app">
+    <section class="hero diary-hero">
+      <p class="kicker sans" data-i18n="analytics.kicker">Аналитика</p>
+      <h1 data-i18n="analytics.h1">Как идёт план: зал, еда и самочувствие</h1>
+      <p class="lead" data-i18n="analytics.lead">Сверху — вывод за период. Графики ниже это подтверждают. Данные из дневника, на этом телефоне.</p>
+      <p class="privacy-note sans" data-i18n="diary.privacy">Данные конфиденциальны: они остаются только на этом телефоне, мы их не видим и никуда не отправляем.</p>
+    </section>
+
+    <p class="callout sans" id="demo-banner" data-i18n="analytics.demo">На экране пример двух недель. Чтобы заменить его своими оценками — откройте дневник и нажмите «Начать со своих оценок».</p>
+
+    <p class="print-only sans" id="print-title"></p>
+
+    <div class="seg log-seg no-print" id="period-range"></div>
+
+    <section class="panel dash-panel" id="week-panel">
+      <h3 data-i18n="an.weekTitle">Как идёт период</h3>
+      <p class="week-verdict" id="week-verdict"></p>
+      <p class="action-line" id="week-action"></p>
+      <div class="dash-kpis three" id="week-kpis"></div>
+      <p class="muted sans" id="week-range"></p>
+    </section>
+
+    <section class="panel dash-panel" id="train-panel">
+      <h3 data-i18n="an.trainTitle">Зал к плану</h3>
+      <p class="muted sans" data-i18n="an.trainHint">План — 3 сессии в неделю.</p>
+      <div class="dash-kpis three" id="train-kpis"></div>
+      <p class="fact-line sans" id="train-abc"></p>
+      <p class="fact-line sans" id="train-hard"></p>
+    </section>
+
+    <section class="panel dash-panel" id="food-panel">
+      <h3 data-i18n="an.foodTitle">Еда к цели</h3>
+      <p class="muted sans" id="food-goal"></p>
+      <div class="dash-kpis three" id="food-kpis"></div>
+    </section>
+
+    <section class="panel dash-panel" id="split-panel">
+      <h3 data-i18n="an.splitTitle">Зал и пропуск</h3>
+      <p class="muted sans" data-i18n="an.splitHint">Средние оценки в день тренировки и в день пропуска.</p>
+      <div class="compare-grid" id="split-grid"></div>
+    </section>
+
+    <section class="panel dash-panel" id="lag-panel">
+      <h3 data-i18n="an.lagTitle">Сон вчера → энергия сегодня</h3>
+      <p class="muted sans" data-i18n="an.lagHint">Не в ту же дату, а со сдвигом на день.</p>
+      <div class="chart-frame" id="lag-chart"></div>
+      <p class="legend sans" id="lag-legend"></p>
+      <p class="muted sans" id="lag-note"></p>
+    </section>
+
+    <section class="panel dash-panel" id="extremes-panel">
+      <h3 data-i18n="an.extremesTitle">Лучшие и слабые дни</h3>
+      <div id="extremes" class="extremes"></div>
+    </section>
+
+    <section class="panel dash-panel hidden" id="weight-panel">
+      <h3 data-i18n="an.weightTitle">Вес</h3>
+      <p class="muted sans" id="weight-hint"></p>
+      <div class="chart-frame" id="weight-chart"></div>
+      <p class="fact-line sans" id="weight-pace"></p>
+    </section>
+
+    <section class="panel dash-panel">
+      <h3 data-i18n="diary.stack">Как менялись оценки</h3>
+      <p class="muted sans" data-i18n="diary.stackHint">Четыре главных оценки по дням. Ось всегда 1–10 — так видно, растёт линия или нет.</p>
+      <div class="chart-frame" id="stack-chart"></div>
+      <p class="legend sans" id="stack-legend"></p>
+    </section>
+
+    <section class="panel dash-panel" id="influence-panel">
+      <h3 class="influence-title"><span data-i18n="diary.topOn">Что влияет сильнее всего на</span> <span id="influence-label"></span></h3>
+      <div class="seg log-seg influence-seg no-print" id="influence-target"></div>
+      <p class="muted sans" data-i18n="an.influenceNote">Связь, не причина. Слабые связи не показываем.</p>
+      <div class="chart-frame" id="influence-chart"></div>
+      <p class="muted sans" data-i18n="diary.corrAxis">отрицательная ←  0  → положительная</p>
+      <p id="insight" class="insight"></p>
+    </section>
+
+    <section class="panel">
+      <p class="muted sans" data-i18n="diary.reviewNote">В пакете «Ревью» $35/мес и в сопровождении этот экран идёт с планом: один разбор в месяц по вашим цифрам и оценкам.</p>
+      <div class="actions no-print">
+        <button type="button" class="btn" id="save-analytics" data-i18n="diary.savePdf">Сохранить PDF</button>
+        <a class="btn ghost" href="diary.html" data-i18n="analytics.toDiary">К дневнику</a>
+        <a class="btn ghost" href="index.html#packs" data-i18n="diary.toPacks">К пакетам</a>
+        <a class="btn ghost" href="plan.html" id="to-plan" data-i18n="diary.toPlan">К моим цифрам</a>
+      </div>
+      <p class="muted sans no-print" data-i18n="diary.savePdfHint">На телефоне в меню печати выберите «Сохранить в PDF». Файл останется у вас, на сервер ничего не уходит.</p>
+    </section>
+  </main>
+
+  <footer class="site wrap wrap-wide sans">
+    <p><a href="index.html" data-i18n="plan.back">← Калькулятор</a> · <a href="diary.html" data-i18n="nav.diary">Дневник</a> · <a href="https://t.me/mityTour">@mityTour</a></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/diary.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" data-page="plan">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ваши цифры · ProFitMITY</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="top no-print">
+    <div class="wrap top-inner">
+      <a class="brand sans" href="index.html">ProFitMITY</a>
+      <div class="top-right">
+        <nav class="nav sans">
+          <a href="index.html" id="edit-link" data-i18n="nav.edit">Изменить данные</a>
+          <a href="diary.html" data-i18n="nav.diary">Дневник</a>
+          <a href="analytics.html" data-i18n="nav.analytics">Аналитика</a>
+          <a id="nav-tg" href="https://t.me/mityTour">Telegram</a>
+        </nav>
+        <div class="lang-switch sans" role="group" aria-label="Language">
+          <button type="button" data-lang="ru">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app">
+    <section class="hero">
+      <p class="kicker sans" data-i18n="plan.kicker">Персональный расчёт</p>
+      <h1 id="headline">Ваши цифры</h1>
+      <p id="sub" class="lead"></p>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><b id="out-bmr">—</b><span data-i18n="stat.bmr">База, ккал</span></div>
+      <div class="stat"><b id="out-tdee">—</b><span data-i18n="stat.tdee">Расход, ккал</span></div>
+      <div class="stat"><b id="out-target">—</b><span data-i18n="stat.target">Цель / сутки</span></div>
+      <div class="stat"><b id="out-food">—</b><span data-i18n="stat.food">Еда, ккал</span></div>
+    </div>
+
+    <div class="protocol" style="margin-top:12px">
+      <h3 data-i18n="plan.protoTitle">Протокол недели</h3>
+      <p id="out-protocol"></p>
+    </div>
+
+    <section class="panel">
+      <h2 data-i18n="plan.macros">КБЖУ на еду</h2>
+      <table>
+        <thead><tr><th data-i18n="th.nutrient">Нутриент</th><th data-i18n="th.grams">Граммы</th><th data-i18n="th.kcal">Ккал</th><th data-i18n="th.why">Зачем</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="nut.protein">Белок</td><td id="out-p">—</td><td id="out-pk">—</td><td data-i18n="plan.whyP">Удержать мышцы в дефиците</td></tr>
+          <tr><td data-i18n="nut.fat">Жир</td><td id="out-f">—</td><td id="out-fk">—</td><td data-i18n="plan.whyF">Гормоны и сытость, не фритюр</td></tr>
+          <tr><td data-i18n="nut.carb">Углеводы</td><td id="out-c">—</td><td id="out-ck">—</td><td data-i18n="plan.whyC">Тренировки и обычная еда</td></tr>
+          <tr id="alcohol-row"><td data-i18n="nut.alcohol">Алкоголь (Бали*)</td><td>—</td><td id="out-a">—</td><td data-i18n="plan.whyA">Фиксированный бюджет, не «сверху»</td></tr>
+        </tbody>
+      </table>
+      <p class="muted" id="out-meta" style="margin-top:12px"></p>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="plan.train">Каркас тренировок</h2>
+      <p data-i18n="plan.trainLead">Три дня в неделю, 90 минут. Понедельник / среда / пятница.</p>
+      <ol class="sans">
+        <li data-i18n="plan.cardio">30 мин эллипсоид или дорожка, зона 2, пульс примерно 120–140, можно говорить.</li>
+        <li data-i18n="plan.abs">Пресс 8–10 мин.</li>
+        <li data-i18n="plan.lift">Силовая ~50 мин.</li>
+      </ol>
+      <table>
+        <thead><tr><th data-i18n="plan.th.day">День</th><th data-i18n="plan.th.focus">Фокус</th></tr></thead>
+        <tbody id="split-body"></tbody>
+      </table>
+      <p class="muted" data-i18n="plan.trainNote">Это каркас. Полный пакет — подходы, замены в зале, видео техники и фото старт/финиш. С планом идёт дневник тренировок и питания.</p>
+      <p class="no-print"><a class="btn ghost" id="plan-diary" href="diary.html" data-i18n="plan.openDiary">Вести дневник</a></p>
+    </section>
+
+    <section class="panel" id="food-block">
+      <h2 id="food-title">Как собирать тарелку</h2>
+      <div id="food-body"></div>
+    </section>
+
+    <div class="callout warn no-print">
+      <p data-i18n="plan.warn">Это расчёт и каркас, не готовая программа «под ключ». Цифры образовательные, не медицинское назначение.</p>
+    </div>
+
+    <div class="actions no-print" style="margin-bottom:28px">
+      <button class="btn ghost" type="button" onclick="window.print()" data-i18n="plan.print">Сохранить / печать</button>
+          <a class="btn ghost" id="open-diary" href="diary.html" data-i18n="btn.diary">Дневник</a>
+          <a class="btn ghost" href="analytics.html" data-i18n="btn.analytics">Аналитика</a>
+      <a class="btn" id="buy" href="index.html#packs" data-i18n="plan.buy">Взять пакет</a>
+      <a class="btn dark" id="tg" href="https://t.me/mityTour">Telegram</a>
+    </div>
+  </main>
+
+  <footer class="site wrap sans">
+    <p><a href="index.html" data-i18n="plan.back">← Калькулятор</a> · <a href="https://t.me/mityTour">@mityTour</a></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/plan.js"></script>
+</body>
+</html>

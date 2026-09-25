@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru" data-page="home">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProFitMITY — персональный план по вашим данным</title>
+  <meta name="description" content="Узнайте калории и КБЖУ. Получите план тренировок и питания со сроком до цели.">
+  <meta property="og:title" content="ProFitMITY — персональный план по вашим данным и целям">
+  <meta property="og:description" content="Калькулятор, готовый план и дневник с аналитикой: оценки 1–10 и корреляции.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand sans" href="#top">ProFitMITY</a>
+      <div class="top-right">
+        <nav class="nav sans">
+          <a href="#calc" data-i18n="nav.calc">Калькулятор</a>
+          <a class="wide" href="#packs" data-i18n="nav.packs">Пакеты</a>
+          <a href="diary.html" data-i18n="nav.diary">Дневник</a>
+          <a href="analytics.html" data-i18n="nav.analytics">Аналитика</a>
+          <a id="nav-tg" href="https://t.me/mityTour">Telegram</a>
+        </nav>
+        <div class="lang-switch sans" role="group" aria-label="Language">
+          <button type="button" data-lang="ru">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="top">
+    <section class="hero">
+      <p class="kicker sans" data-i18n="hero.kicker">Персональный план по вашим данным и целям</p>
+      <h1 data-i18n="hero.h1">Узнайте свои данные — получите персональный план с расчётным сроком до цели</h1>
+      <p class="lead" data-i18n="hero.lead">Введите данные и цель — получите расчётные BMR, TDEE, КБЖУ и темп в кг/неделю. Далее выбирайте оптимальный для вас план — идите к цели.</p>
+    </section>
+
+    <div class="steps sans">
+      <div class="step"><div class="num">1</div><h3 data-i18n="step1.title">Считаете себя</h3><p class="muted" data-i18n="step1.text">Цель, уровень, активность и срок.</p></div>
+      <div class="step"><div class="num">2</div><h3 data-i18n="step2.title">Смотрите цифры</h3><p class="muted" data-i18n="step2.text">BMR, TDEE, КБЖУ и темп в кг/неделю.</p></div>
+      <div class="step"><div class="num">3</div><h3 data-i18n="step3.title">Берёте нужный план</h3><p class="muted" data-i18n="step3.text">Тренировки + питание или один из них.</p></div>
+    </div>
+
+    <section id="calc" class="section">
+      <h2 data-i18n="calc.title">Калькулятор</h2>
+
+      <form id="form" class="panel" autocomplete="off">
+        <div class="cluster">
+          <p class="cluster-title sans" data-i18n="calc.body">Тело</p>
+          <div class="grid-2">
+            <div class="field">
+              <span data-i18n="calc.sex">Пол</span>
+              <div class="seg" data-name="sex">
+                <button type="button" data-value="male" aria-pressed="true" data-i18n="sex.male">Мужской</button>
+                <button type="button" data-value="female" aria-pressed="false" data-i18n="sex.female">Женский</button>
+              </div>
+            </div>
+            <label class="field"><span data-i18n="field.age">Возраст, лет</span>
+              <input name="age" type="number" inputmode="numeric" min="16" max="80" value="35" required>
+            </label>
+            <label class="field"><span data-i18n="field.cm">Рост, см</span>
+              <input name="cm" type="number" inputmode="decimal" min="140" max="220" value="175" required>
+            </label>
+            <label class="field"><span data-i18n="field.kg">Вес, кг</span>
+              <input name="kg" type="number" inputmode="decimal" min="40" max="220" step="0.1" value="80" required>
+            </label>
+          </div>
+        </div>
+
+        <div class="cluster">
+          <p class="cluster-title sans" data-i18n="calc.goal">Цель</p>
+          <div class="field">
+            <div class="seg" data-name="goal">
+              <button type="button" data-value="recomp" aria-pressed="true" data-i18n="goal.recomp">Рекомпозиция</button>
+              <button type="button" data-value="lose" aria-pressed="false" data-i18n="goal.lose">Похудение</button>
+              <button type="button" data-value="gain" aria-pressed="false" data-i18n="goal.gain">Набор массы</button>
+              <button type="button" data-value="maintain" aria-pressed="false" data-i18n="goal.maintain">Поддержание</button>
+            </div>
+          </div>
+          <label class="field hidden" id="kg-delta-wrap">
+            <span id="kg-delta-label" data-i18n="field.loseKg">Сбросить, кг</span>
+            <input name="kgDelta" type="number" inputmode="decimal" min="0.5" max="40" step="0.5" value="5">
+          </label>
+        </div>
+
+        <div class="cluster">
+          <p class="cluster-title sans" data-i18n="calc.level">Уровень</p>
+          <div class="field">
+            <div class="seg" data-name="level">
+              <button type="button" data-value="novice" aria-pressed="false" data-i18n="level.novice">Новичок</button>
+              <button type="button" data-value="active" aria-pressed="true" data-i18n="level.active">Активный</button>
+              <button type="button" data-value="advanced" aria-pressed="false" data-i18n="level.advanced">Продвинутый</button>
+              <button type="button" data-value="restart" aria-pressed="false" data-i18n="level.restart">После перерыва</button>
+              <button type="button" data-value="rehab" aria-pressed="false" data-i18n="level.rehab">Ограничения / травмы</button>
+            </div>
+          </div>
+          <label class="field hidden" id="limits-wrap"><span data-i18n="field.limits">Что болит или мешает</span>
+            <input name="limits" type="text" maxlength="140" data-i18n-placeholder="ph.limits" placeholder="колено, грыжа, нет приседа...">
+          </label>
+        </div>
+
+        <div class="cluster">
+          <p class="cluster-title sans" data-i18n="calc.activity">Активность</p>
+          <div class="field">
+            <div class="seg" data-name="activity">
+              <button type="button" data-value="sedentary" aria-pressed="false" data-i18n="actBtn.sedentary">Сидячий</button>
+              <button type="button" data-value="light" aria-pressed="false" data-i18n="actBtn.light">1–3 тренировки</button>
+              <button type="button" data-value="gym3" aria-pressed="true" data-i18n="actBtn.gym3">Зал 3–4 раза</button>
+              <button type="button" data-value="high" aria-pressed="false" data-i18n="actBtn.high">6–7 тяжёлых</button>
+              <button type="button" data-value="extra" aria-pressed="false" data-i18n="actBtn.extra">Работа руками / 2× день</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cluster" id="strategy-wrap">
+          <p class="cluster-title sans" data-i18n="calc.strategy">Стратегия срока</p>
+          <div class="field">
+            <div class="seg" data-name="strategy">
+              <button type="button" data-value="gentle" aria-pressed="false" data-i18n="strategyBtn.gentle">Мягко · дольше</button>
+              <button type="button" data-value="optimal" aria-pressed="true" data-i18n="strategyBtn.optimal">Оптимально</button>
+              <button type="button" data-value="fast" aria-pressed="false" data-i18n="strategyBtn.fast">Быстрее · жёстче</button>
+            </div>
+            <p class="star-note" id="strategy-hint" data-i18n="strategy.hint">Темп задаёт калории. Срок в неделях посчитается из килограммов.</p>
+          </div>
+        </div>
+
+        <div class="cluster">
+          <p class="cluster-title sans" data-i18n="calc.life">Образ жизни</p>
+          <div class="field">
+            <div class="seg" data-name="lifestyle">
+              <button type="button" data-value="usual" aria-pressed="true" data-i18n="life.usual">Обычный</button>
+              <button type="button" data-value="bali" aria-pressed="false" data-i18n="life.bali">Бали</button>
+            </div>
+            <p class="star-note hidden" id="bali-note" data-i18n="bali.note">* На Бали пиво — часть калорий, не сверху. Сколько в день?</p>
+            <div class="seg hidden" data-name="alcohol" id="alcohol-seg">
+              <button type="button" data-value="none" aria-pressed="true" data-i18n="alc.none">Без пива</button>
+              <button type="button" data-value="beer330" aria-pressed="false" data-i18n="alc.330">0,33 л</button>
+              <button type="button" data-value="beer1000" aria-pressed="false" data-i18n="alc.1000">1 л</button>
+              <button type="button" data-value="beer1500" aria-pressed="false" data-i18n="alc.1500">1,5 л</button>
+              <button type="button" data-value="custom" aria-pressed="false" data-i18n="alc.custom">Свои ккал</button>
+            </div>
+          </div>
+          <label class="field hidden" id="alcohol-custom"><span data-i18n="field.alcKcal">Свои ккал алкоголя</span>
+            <input name="alcoholKcal" type="number" inputmode="numeric" min="0" max="1500" data-i18n-placeholder="ph.alcKcal" placeholder="например 400">
+          </label>
+        </div>
+
+        <div class="actions no-print">
+          <button class="btn" type="submit" data-i18n="btn.calc">Рассчитать</button>
+          <button class="btn ghost" type="button" id="reset" data-i18n="btn.reset">Сбросить</button>
+        </div>
+      </form>
+
+      <div id="results" class="hidden">
+        <div class="stats">
+            <div class="stat"><b id="out-bmr">—</b><span data-i18n="stat.bmr">База, ккал</span></div>
+            <div class="stat"><b id="out-tdee">—</b><span data-i18n="stat.tdee">Расход, ккал</span></div>
+          <div class="stat"><b id="out-target">—</b><span data-i18n="stat.target">Цель / сутки</span></div>
+          <div class="stat"><b id="out-weeks">—</b><span id="out-weeks-label" data-i18n="stat.weeks">Срок</span></div>
+        </div>
+        <div class="protocol" style="margin-top:12px">
+          <h3 data-i18n="proto.title">Как есть эти калории</h3>
+          <p id="out-protocol"></p>
+        </div>
+        <table>
+          <thead><tr><th data-i18n="th.nutrient">Нутриент</th><th data-i18n="th.grams">Граммы</th><th data-i18n="th.kcal">Ккал</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="nut.protein">Белок</td><td id="out-p">—</td><td id="out-pk">—</td></tr>
+            <tr><td data-i18n="nut.fat">Жир</td><td id="out-f">—</td><td id="out-fk">—</td></tr>
+            <tr><td data-i18n="nut.carb">Углеводы</td><td id="out-c">—</td><td id="out-ck">—</td></tr>
+            <tr id="alcohol-row"><td id="alcohol-row-label" data-i18n="nut.alcohol">Алкоголь</td><td>—</td><td id="out-a">—</td></tr>
+          </tbody>
+        </table>
+        <p class="muted sans" id="out-bmi" style="margin-top:12px"></p>
+        <div class="actions no-print">
+          <a class="btn" id="open-plan" href="plan.html" data-i18n="btn.save">Сохранить мои данные</a>
+          <a class="btn ghost" id="open-diary" href="diary.html" data-i18n="btn.diary">Дневник</a>
+          <a class="btn ghost" id="open-analytics" href="analytics.html" data-i18n="btn.analytics">Аналитика</a>
+          <a class="btn ghost" id="buy-rec" href="#packs" data-i18n="btn.packs">К пакетам</a>
+          <a class="btn dark" id="ask-tg" href="https://t.me/mityTour" data-i18n="btn.tg">Написать в Telegram</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="packs" class="section">
+      <h2 data-i18n="packs.title">Пакеты</h2>
+      <p class="muted" data-i18n="packs.lead">Тренировки, питание или оба. С планом — дневник. С подпиской — ещё аналитика, что именно влияет на ваше самочувствие.</p>
+
+      <div class="cards">
+        <article class="card" data-family="self">
+          <h3><span data-i18n="pack.self.title">Пакет «Сам»</span> <span class="card-sub" data-i18n="pack.self.sub">(без созвонов)</span></h3>
+          <div class="seg pack-seg" data-pack="self">
+            <button type="button" data-product="self-train" aria-pressed="false" data-i18n="pack.trainOnly">Только тренировки</button>
+            <button type="button" data-product="self-food" aria-pressed="false" data-i18n="pack.foodOnly">Только питание</button>
+            <button type="button" data-product="self-both" aria-pressed="true" data-i18n="pack.both">Тренировки + питание</button>
+          </div>
+          <div class="price" data-price-slot><span>$49</span><span class="rub">4 200 ₽</span></div>
+          <p class="pay-note sans" data-pay-slot>*разовая оплата · *поддержка в чате (3 вопроса в месяц)</p>
+          <p class="pack-blurb muted sans" data-blurb-slot>Зал и питание одним файлом. Дневник тренировок и еды. Три вопроса в чат за месяц.</p>
+          <a class="btn full buy" data-family="self" href="#calc" data-i18n="pack.self.cta">Взять «Сам»</a>
+        </article>
+
+        <article class="card" data-family="custom">
+          <h3><span data-i18n="pack.custom.title">Персональный план</span> <span class="card-sub" data-i18n="pack.custom.sub">(консультации и разбор)</span></h3>
+          <div class="seg pack-seg" data-pack="custom">
+            <button type="button" data-product="custom-train" aria-pressed="false" data-i18n="pack.planTrain">План тренировок</button>
+            <button type="button" data-product="custom-food" aria-pressed="false" data-i18n="pack.planFood">План питания</button>
+            <button type="button" data-product="custom-both" aria-pressed="true" data-i18n="pack.both">Тренировки + питание</button>
+          </div>
+          <div class="price" data-price-slot><span>$99</span><span class="rub">8 400 ₽</span></div>
+          <p class="pay-note sans" data-pay-slot>*разовая оплата</p>
+          <p class="pack-blurb muted sans" data-blurb-slot>Зал + питание под вас. Дневник обоих. Разовая оплата, консультация и разбор.</p>
+          <a class="btn ghost full buy" data-family="custom" href="#calc" data-i18n="pack.custom.cta">Заказать</a>
+        </article>
+
+        <article class="card" data-family="coach">
+          <span class="pill" data-i18n="pack.coach.pill">С разбором</span>
+          <h3 data-i18n="pack.coach.title">Подписка</h3>
+          <div class="seg pack-seg" data-pack="coach">
+            <button type="button" data-product="coach-review" aria-pressed="true" data-i18n="pack.review">Ревью</button>
+            <button type="button" data-product="coach-train" aria-pressed="false" data-i18n="pack.train">Тренировки</button>
+            <button type="button" data-product="coach-food" aria-pressed="false" data-i18n="pack.food">Питание</button>
+            <button type="button" data-product="coach-both" aria-pressed="false" data-i18n="pack.bothShort">Оба</button>
+          </div>
+          <div class="price" data-price-slot><span>$35/мес</span><span class="rub">3 000 ₽/мес</span></div>
+          <p class="pay-note sans" data-pay-slot>*ежемесячная оплата</p>
+          <p class="pack-blurb muted sans" data-blurb-slot>Дневник с аналитикой: оценки 1–10 и корреляции. Один разбор плана в месяц.</p>
+          <a class="btn ghost full buy" data-family="coach" href="#calc" data-i18n="pack.coach.cta">Оформить</a>
+        </article>
+
+        <article class="card" data-family="live">
+          <span class="pill" data-i18n="pack.live.pill">В камере</span>
+          <h3 data-i18n="pack.live.title">Онлайн-тренировки</h3>
+          <div class="seg pack-seg" data-pack="live">
+            <button type="button" data-product="live-sub" aria-pressed="false" data-i18n="pack.liveSub">Подписка</button>
+            <button type="button" data-product="live-once" aria-pressed="true" data-i18n="pack.liveOnce">Разовая</button>
+            <button type="button" data-product="live-six" aria-pressed="false" data-i18n="pack.liveSix">Пакет 6</button>
+          </div>
+          <div class="price" data-price-slot><span>$42</span><span class="rub">3 600 ₽</span></div>
+          <p class="pay-note sans" data-pay-slot>*разовая оплата</p>
+          <p class="pack-blurb muted sans" data-blurb-slot>Одна сессия 90 мин: разбор техники и полноценная тренировка.</p>
+          <a class="btn ghost full buy" data-family="live" href="#calc" data-i18n="pack.live.cta">Записаться</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="who">
+      <h2 data-i18n="who.title">Ориентир по выбору пакета</h2>
+      <div class="who">
+        <article>
+          <h3 data-i18n="who.file.title">Нужен готовый файл</h3>
+          <p class="muted" data-i18n="who.file.text">«Сам» — разово, дневник и три вопроса в чат за месяц.</p>
+        </article>
+        <article>
+          <h3 data-i18n="who.new.title">Новичок, травма, нестандарт</h3>
+          <p class="muted" data-i18n="who.new.text">Персональный план — консультации и разбор. Готовый «Сам» тут слабо помогает.</p>
+        </article>
+        <article>
+          <h3 data-i18n="who.self.title">Хотите лучше понять себя и видеть, какие составляющие влияют на ваше качество жизни больше всего</h3>
+          <p class="muted" data-i18n="who.self.text">Ревью $35/мес — дневник 1–10 и корреляции + один разбор плана в месяц. Если нужна правка каждую неделю — сопровождение.</p>
+        </article>
+        <article>
+          <h3 data-i18n="who.live.title">Хотите, чтобы провели тренировку</h3>
+          <p class="muted" data-i18n="who.live.text">Онлайн: разовая 90 мин, пакет 6 или две сессии в неделю.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site wrap sans">
+    <p>
+      <a id="ft-tg" href="https://t.me/mityTour">Telegram @mityTour</a>
+      ·
+      <a href="https://wa.me/79958958555">WhatsApp</a>
+      ·
+      <a href="mailto:smittour@gmail.com">smittour@gmail.com</a>
+    </p>
+    <p data-i18n="footer.legal">Расчёт: Mifflin–St Jeor. Образовательный инструмент, не медицинское назначение.</p>
+  </footer>
+
+  <div class="mobile-bar no-print">
+    <a class="btn ghost" href="#calc" data-i18n="bar.numbers">Цифры</a>
+    <a class="btn" id="bar-tg" href="https://t.me/mityTour">Telegram</a>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
