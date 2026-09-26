@@ -166,6 +166,8 @@
     let skippedOnce = false;
     let sessionI = 0;
     const kgByAgo = { 20: 80.8, 16: 80.5, 12: 80.2, 9: 80.0, 6: 80.4, 3: 79.8, 0: 79.4 };
+    const sleepStory = [8, 7, 8, 7, 8, 6, 7, 7, 4, 3, 6, 7, 7, 6, 7, 6, 8, 8, 9, 8, 8];
+    const stressStory = [4, 6, 3, 5, 4, 5, 3, 4, 6, 7, 4, 8, 5, 6, 4, 7, 3, 4, 5, 3, 4];
     for (let ago = 20; ago >= 0; ago--) {
       const date = addDays(end, -ago);
       const dow = new Date(date + "T12:00:00").getDay();
@@ -180,26 +182,17 @@
       const effort = trainStatus === "done" && (ago === 18 || ago === 2) ? "hard" : "ok";
       const session = trainStatus === "done" ? ["a", "b", "c"][sessionI++ % 3] : "a";
       const foodHit = ago === 7 || ago === 6 ? "over" : ago === 16 ? "under" : "on";
-      let sleep = 7;
-      if (ago === 12) sleep = 4;
-      else if (ago === 11) sleep = 3;
-      else if (ago <= 4) sleep = ago === 2 ? 9 : 8;
-      else if (ago >= 15) sleep = 7 + (ago % 2);
-      else if (ago === 8 || ago === 9) sleep = 7;
-      else sleep = 6 + (ago % 3 === 0 ? 1 : 0);
+      const sleep = sleepStory[20 - ago];
+      let stress = stressStory[20 - ago];
+      if (trainStatus === "skipped") stress = Math.max(stress, 5);
+      if (foodHit === "over") stress = Math.max(stress, 5);
       const activity =
         trainStatus === "done" ? (effort === "hard" ? 9 : 8) : trainStatus === "skipped" ? 2 : 5;
       const prev = out[out.length - 1];
       const prevSleep = prev ? prev.scores.sleep : sleep;
-      const energy = clamp(Math.round(0.72 * prevSleep + 0.28 * activity), 2, 10);
-      const productivity = clamp(Math.round(0.7 * sleep + 0.18 * energy + (ago === 5 ? -2 : 0.3)), 2, 10);
-      let stress = 4;
-      if (ago === 12 || ago === 11) stress = 8;
-      else if (ago === 9 || ago === 8) stress = 9;
-      else if (trainStatus === "skipped") stress = 6;
-      else if (ago <= 3) stress = 3;
-      else if (ago >= 16) stress = 4;
-      const mood = clamp(Math.round(10.2 - 0.78 * stress + 0.08 * sleep), 2, 10);
+      const energy = clamp(Math.round(0.65 * prevSleep + 0.35 * activity), 2, 10);
+      const productivity = clamp(Math.round(0.72 * sleep + 0.2 * energy + (ago === 5 ? -2 : 0)), 2, 10);
+      const mood = clamp(Math.round(0.48 * sleep + 0.28 * energy + 0.12 * (10 - stress)), 2, 10);
       const foodScore = foodHit === "over" ? 3 : foodHit === "under" ? 5 : 8;
       const wellbeing = clamp(
         foodScore + (sleep <= 4 ? -1 : 0) + (foodHit === "on" && sleep >= 8 ? 1 : 0),
@@ -558,9 +551,10 @@
           d: d,
           fill: "none",
           stroke: color,
-          "stroke-width": "2.4",
+          "stroke-width": byId[key].invert ? "2.2" : "2.4",
           "stroke-linejoin": "round",
           "stroke-linecap": "round",
+          "stroke-dasharray": byId[key].invert ? "7 5" : "none",
         })
       );
       rows.forEach((row, i) => {
