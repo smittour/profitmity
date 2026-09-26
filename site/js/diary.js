@@ -163,45 +163,77 @@
   function demoEntries() {
     const end = todayISO();
     const out = [];
-    for (let i = 20; i >= 0; i--) {
-      const date = addDays(end, -i);
-      const wave = Math.sin(i / 3.2);
+    let skippedOnce = false;
+    let sessionI = 0;
+    const kgByAgo = { 20: 80.8, 16: 80.5, 12: 80.2, 9: 80.0, 6: 80.4, 3: 79.8, 0: 79.4 };
+    for (let ago = 20; ago >= 0; ago--) {
+      const date = addDays(end, -ago);
       const dow = new Date(date + "T12:00:00").getDay();
-      const train = dow !== 0 && dow !== 6;
-      const sleep = clamp(6.2 + wave * 1.4 + (train ? 0.2 : -0.6), 2, 9);
-      const activity = clamp((train ? 7.1 : 4.4) + wave * 0.8, 2, 9);
-      const energy = clamp(0.45 * sleep + 0.4 * activity + 0.7 + wave * 0.3, 2, 9);
-      const productivity = clamp(0.5 * sleep + 0.25 * energy + 1.4, 2, 9);
-      const mood = clamp(0.4 * sleep + 0.35 * energy + 1.1 - (i === 4 ? 1.5 : 0), 2, 9);
-      const wellbeing = clamp(0.35 * sleep + 0.3 * mood + 0.2 * activity + 1.2, 2, 9);
-      const satisfaction = clamp(0.4 * activity + 0.3 * wellbeing + 1.3, 2, 9);
-      const stress = clamp(7.2 - 0.45 * sleep - 0.2 * activity + (i % 5 === 1 ? 1.2 : 0), 2, 8);
-      const round1 = (n) => Math.round(n);
+      const protocol = dow === 1 || dow === 3 || dow === 5;
+      let trainStatus = "rest";
+      if (protocol && !skippedOnce && ago >= 9 && ago <= 12) {
+        trainStatus = "skipped";
+        skippedOnce = true;
+      } else if (protocol) {
+        trainStatus = "done";
+      }
+      const effort = trainStatus === "done" && (ago === 18 || ago === 2) ? "hard" : "ok";
+      const session = trainStatus === "done" ? ["a", "b", "c"][sessionI++ % 3] : "a";
+      const foodHit = ago === 7 || ago === 6 ? "over" : ago === 16 ? "under" : "on";
+      let sleep = 7;
+      if (ago === 12) sleep = 4;
+      else if (ago === 11) sleep = 3;
+      else if (ago <= 4) sleep = ago === 2 ? 9 : 8;
+      else if (ago >= 15) sleep = 7 + (ago % 2);
+      else if (ago === 8 || ago === 9) sleep = 7;
+      else sleep = 6 + (ago % 3 === 0 ? 1 : 0);
+      const activity =
+        trainStatus === "done" ? (effort === "hard" ? 9 : 8) : trainStatus === "skipped" ? 2 : 5;
+      const prev = out[out.length - 1];
+      const prevSleep = prev ? prev.scores.sleep : sleep;
+      const energy = clamp(Math.round(0.72 * prevSleep + 0.28 * activity), 2, 10);
+      const productivity = clamp(Math.round(0.7 * sleep + 0.18 * energy + (ago === 5 ? -2 : 0.3)), 2, 10);
+      let stress = 4;
+      if (ago === 12 || ago === 11) stress = 8;
+      else if (ago === 9 || ago === 8) stress = 9;
+      else if (trainStatus === "skipped") stress = 6;
+      else if (ago <= 3) stress = 3;
+      else if (ago >= 16) stress = 4;
+      const mood = clamp(Math.round(10.2 - 0.78 * stress + 0.08 * sleep), 2, 10);
+      const foodScore = foodHit === "over" ? 3 : foodHit === "under" ? 5 : 8;
+      const wellbeing = clamp(
+        foodScore + (sleep <= 4 ? -1 : 0) + (foodHit === "on" && sleep >= 8 ? 1 : 0),
+        2,
+        10
+      );
+      const satisfaction = clamp(Math.round(0.72 * activity + 0.22 * wellbeing), 2, 10);
+      const kcal = foodHit === "over" ? 2860 : foodHit === "under" ? 1640 : 2140 + (ago % 3) * 30;
+      const proteinG = foodHit === "over" ? 88 : foodHit === "under" ? 92 : 142 + (ago % 3) * 4;
       out.push({
         date,
         demo: true,
-        train,
-        trainStatus: train ? "done" : dow === 0 ? "rest" : "skipped",
-        session: train ? ["a", "b", "c"][i % 3] : "a",
-        effort: train ? (i % 4 === 0 ? "hard" : "ok") : "ok",
+        train: trainStatus === "done",
+        trainStatus,
+        session,
+        effort,
         trainNote: "",
-        food: i % 5 !== 2,
-        foodHit: i % 5 === 2 ? "over" : i % 5 === 4 ? "under" : "on",
-        proteinHit: i % 5 !== 2,
-        kcal: i % 5 === 2 ? 2780 : i % 5 === 4 ? 1680 : 2180 + (i % 3) * 40,
-        proteinG: i % 5 === 2 ? 90 : i % 5 === 4 ? 95 : 140 + (i % 3) * 5,
-        kg: i % 7 === 0 ? String(Math.round((80.4 - (20 - i) * 0.05) * 10) / 10) : "",
+        food: foodHit !== "under",
+        foodHit,
+        proteinHit: foodHit === "on",
+        kcal,
+        proteinG,
+        kg: kgByAgo[ago] != null ? String(kgByAgo[ago]) : "",
         foodNote: "",
         notes: "",
         scores: {
-          sleep: round1(sleep),
-          energy: round1(energy),
-          productivity: round1(productivity),
-          wellbeing: round1(wellbeing),
-          satisfaction: round1(satisfaction),
-          activity: round1(activity),
-          mood: round1(mood),
-          stress: round1(stress),
+          sleep: sleep,
+          energy: energy,
+          productivity: productivity,
+          wellbeing: wellbeing,
+          satisfaction: satisfaction,
+          activity: activity,
+          mood: mood,
+          stress: stress,
         },
       });
     }
@@ -485,24 +517,37 @@
     return svg;
   }
 
-  function timeLines(rows, keys) {
+  function timeLines(rows, keys, opts) {
     const w = 640;
     const h = 280;
-    const pad = { l: 36, r: 14, t: 12, b: 36 };
+    const pad = { l: 36, r: 16, t: 12, b: 40 };
     const n = Math.max(rows.length, 2);
     const xAt = (i) => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
     const svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, class: "chart-svg" });
-    const step = rows.length > 16 ? 3 : rows.length > 10 ? 2 : 1;
-    const ticks = [];
-    for (let i = 0; i < rows.length; i += step) {
-      const show =
-        i === 0 || i === rows.length - 1 || i === Math.round((rows.length - 1) / 2);
-      ticks.push({ v: i, label: show && rows[i] ? shortDate(rows[i].date) : "" });
-    }
-    if (rows.length && ticks[ticks.length - 1].v !== rows.length - 1) {
-      ticks.push({ v: rows.length - 1, label: shortDate(rows[rows.length - 1].date) });
-    }
+    const labelEvery = rows.length > 16 ? 4 : rows.length > 8 ? 3 : 1;
+    const ticks = rows.map((row, i) => {
+      const show = i === 0 || i === rows.length - 1 || i % labelEvery === 0;
+      return { v: i, label: show ? shortDate(row.date) : "" };
+    });
     drawScoreGrid(svg, pad, w, h, xAt, ticks);
+    if (!opts || opts.marks !== false) {
+      rows.forEach((row, i) => {
+        if (statusOf(row) !== "skipped") return;
+        const xx = xAt(i);
+        svg.appendChild(
+          svgEl("line", {
+            x1: xx,
+            x2: xx,
+            y1: pad.t,
+            y2: h - pad.b,
+            stroke: "#c2410c",
+            "stroke-width": "1.4",
+            "stroke-dasharray": "3 4",
+            opacity: "0.55",
+          })
+        );
+      });
+    }
     keys.forEach((key) => {
       const color = byId[key].color;
       const d = rows
@@ -518,6 +563,16 @@
           "stroke-linecap": "round",
         })
       );
+      rows.forEach((row, i) => {
+        svg.appendChild(
+          svgEl("circle", {
+            cx: xAt(i),
+            cy: yScore(pad, h, row.scores[key]),
+            r: "2.6",
+            fill: color,
+          })
+        );
+      });
     });
     return svg;
   }
@@ -540,7 +595,7 @@
     const xAt = (i) => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
     const yAt = (y) => pad.t + (1 - (y - minY) / (maxY - minY)) * (h - pad.t - pad.b);
     const svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, class: "chart-svg" });
-    const yTicks = [minY, (minY + maxY) / 2, maxY];
+    const yTicks = [minY, minY + (maxY - minY) / 3, minY + (2 * (maxY - minY)) / 3, maxY];
     yTicks.forEach((y) => {
       const yy = yAt(y);
       svg.appendChild(
@@ -554,9 +609,25 @@
       );
       svg.appendChild(axisText(pad.l - 6, yy + 4, fmt1(y), { "text-anchor": "end" }));
     });
+    if (points.length) {
+      const base = yAt(points[0].y);
+      svg.appendChild(
+        svgEl("line", {
+          x1: pad.l,
+          x2: w - pad.r,
+          y1: base,
+          y2: base,
+          stroke: color,
+          "stroke-width": "1",
+          "stroke-dasharray": "4 5",
+          opacity: "0.45",
+        })
+      );
+    }
+    const dateEvery = points.length > 8 ? 2 : 1;
     points.forEach((p, i) => {
       if (!p.date) return;
-      const show = i === 0 || i === points.length - 1;
+      const show = i === 0 || i === points.length - 1 || i % dateEvery === 0;
       if (show) svg.appendChild(axisText(xAt(i), h - pad.b + 16, shortDate(p.date), { "text-anchor": "middle" }));
     });
     const d = points.map((p, i) => (i ? "L" : "M") + xAt(i) + "," + yAt(p.y)).join(" ");
@@ -758,7 +829,15 @@
     const byDate = Object.fromEntries(cur.map((r) => [r.date, r]));
     cur.forEach((row) => {
       const next = byDate[addDays(row.date, 1)];
-      if (next) lagPairs.push({ x: row.scores.sleep, y: next.scores.energy });
+      if (next) {
+        lagPairs.push({
+          date: next.date,
+          sleep: row.scores.sleep,
+          energy: next.scores.energy,
+          x: row.scores.sleep,
+          y: next.scores.energy,
+        });
+      }
     });
     let action = I18N.t("an.actHold");
     if (skipsNow >= 2 && doneNow < expected) action = I18N.t("an.actSkip");
@@ -852,22 +931,25 @@
     const lagRoot = el("lag-chart");
     if (lagRoot) {
       lagRoot.innerHTML = "";
-      const lagGrouped = {};
-      lagPairs.forEach((p) => {
-        if (!lagGrouped[p.x]) lagGrouped[p.x] = [];
-        lagGrouped[p.x].push(p.y);
-      });
-      const lagPts = Object.keys(lagGrouped)
-        .map(Number)
-        .sort((a, b) => a - b)
-        .map((x) => ({ x: x, y: mean(lagGrouped[x]) }));
       const highSleep = lagPairs.filter((p) => p.x >= 7);
       const lowSleep = lagPairs.filter((p) => p.x <= 5);
-      if (lagPts.length >= 2) {
-        lagRoot.appendChild(relationChart([{ color: byId.energy.color, points: lagPts }]));
+      if (lagPairs.length >= 2) {
+        const lagRows = lagPairs.map((p) => ({
+          date: p.date,
+          trainStatus: "rest",
+          scores: { sleep: p.sleep, energy: p.energy },
+        }));
+        lagRoot.appendChild(timeLines(lagRows, ["sleep", "energy"], { marks: false }));
         setHtml(
           "lag-legend",
-          "<i style=\"background:" + byId.energy.color + "\"></i>" + I18N.t("an.lagLegend")
+          "<i style=\"background:" +
+            byId.sleep.color +
+            "\"></i>" +
+            I18N.t("an.lagLegend") +
+            "<i style=\"background:" +
+            byId.energy.color +
+            "\"></i>" +
+            I18N.t("an.lagLegendEnergy")
         );
         if (highSleep.length >= 2 && lowSleep.length >= 2) {
           setText(
@@ -952,7 +1034,15 @@
         wRoot.appendChild(valueLine(weightPts, "#0f766e"));
         const delta = weightPts[weightPts.length - 1].y - weightPts[0].y;
         const signed = (delta > 0 ? "+" : "") + fmt1(delta);
-        setText("weight-pace", I18N.t("an.pace", { delta: signed }));
+        setText(
+          "weight-pace",
+          I18N.t("an.pace", {
+            a: fmt1(weightPts[0].y),
+            b: fmt1(weightPts[weightPts.length - 1].y),
+            n: weightPts.length,
+            delta: signed,
+          })
+        );
       }
     }
 
@@ -967,6 +1057,19 @@
         return "<i style=\"background:" + byId[id].color + "\"></i>" + metricShort(id);
       }).join("");
     }
+    if (cur.length) {
+      setText(
+        "stack-note",
+        I18N.t("an.stackMove", {
+          s0: cur[0].scores.sleep,
+          s1: cur[cur.length - 1].scores.sleep,
+          e0: cur[0].scores.energy,
+          e1: cur[cur.length - 1].scores.energy,
+        })
+      );
+    } else {
+      setText("stack-note", "");
+    }
 
     buildInfluenceTargets();
     const influenceRows = cur.length >= 10 ? cur : [];
@@ -977,7 +1080,7 @@
           influenceRows.map((row) => row.scores[m.id]),
           targetRows
         );
-        if (r === null || Math.abs(r) < 0.3) return null;
+        if (r === null) return null;
         return { id: m.id, r: r, label: metricShort(m.id) };
       })
       .filter(Boolean)
@@ -992,10 +1095,14 @@
       if (!influenceItems.length) {
         insight.textContent = I18N.t("diary.needDays");
       } else {
-        insight.textContent = I18N.t("an.influenceAct", {
-          a: metricShort(influenceItems[0].id),
-          better: betterFor(influenceItems[0].id),
+        const top = influenceItems[0];
+        const key = top.r < 0 ? "an.influenceActNeg" : "an.influenceAct";
+        let line = I18N.t(key, {
+          target: metricLabel(influenceTarget),
+          a: metricShort(top.id),
         });
+        if (influenceItems[1]) line += " " + I18N.t("an.influenceNext", { b: metricShort(influenceItems[1].id) });
+        insight.textContent = line;
       }
     }
   }

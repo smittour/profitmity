@@ -29,11 +29,11 @@
     <section class="hero diary-hero">
       <p class="kicker sans" data-i18n="analytics.kicker">Аналитика</p>
       <h1 data-i18n="analytics.h1">Как идёт план: зал, еда и самочувствие</h1>
-      <p class="lead" data-i18n="analytics.lead">Сверху — вывод за период. Графики ниже это подтверждают. Данные из дневника, на этом телефоне.</p>
-      <p class="privacy-note sans" data-i18n="diary.privacy">Данные конфиденциальны: они остаются только на этом телефоне, мы их не видим и никуда не отправляем.</p>
+      <p class="lead" data-i18n="analytics.lead">Аналитика за период по вашим данным из дневника.</p>
+      <p class="privacy-note sans" data-i18n="diary.privacy">*Данные конфиденциальны и доступны только на вашем устройстве.</p>
     </section>
 
-    <p class="callout sans" id="demo-banner" data-i18n="analytics.demo">На экране пример двух недель. Чтобы заменить его своими оценками — откройте дневник и нажмите «Начать со своих оценок».</p>
+    <p class="callout sans" id="demo-banner" data-i18n="analytics.demo">Пример аналитики из дневника за выбранный период. Чтобы построить аналитику по своим данным — откройте дневник и нажмите «Начать со своих оценок».</p>
 
     <p class="print-only sans" id="print-title"></p>
 
@@ -67,9 +67,26 @@
       <div class="compare-grid" id="split-grid"></div>
     </section>
 
+    <section class="panel dash-panel" id="influence-panel">
+      <h3 class="influence-title"><span data-i18n="diary.topOn">Что влияет сильнее всего на</span> <span id="influence-label"></span></h3>
+      <div class="seg log-seg influence-seg no-print" id="influence-target"></div>
+      <p class="muted sans" data-i18n="an.influenceNote">Связь, не причина. Нужно от 10 дней. Переключите параметр — картина меняется.</p>
+      <div class="chart-frame" id="influence-chart"></div>
+      <p class="muted sans" data-i18n="diary.corrAxis">отрицательная ←  0  → положительная</p>
+      <p id="insight" class="insight"></p>
+    </section>
+
+    <section class="panel dash-panel">
+      <h3 data-i18n="diary.stack">Как менялись оценки</h3>
+      <p class="muted sans" data-i18n="diary.stackHint">Сон, энергия, настроение и стресс по дням. Ось 1–10 — так видно спад и восстановление.</p>
+      <div class="chart-frame" id="stack-chart"></div>
+      <p class="legend sans" id="stack-legend"></p>
+      <p class="fact-line sans" id="stack-note"></p>
+    </section>
+
     <section class="panel dash-panel" id="lag-panel">
-      <h3 data-i18n="an.lagTitle">Сон вчера → энергия сегодня</h3>
-      <p class="muted sans" data-i18n="an.lagHint">Не в ту же дату, а со сдвигом на день.</p>
+      <h3 data-i18n="an.lagTitle">Корреляция сна и энергии</h3>
+      <p class="muted sans" data-i18n="an.lagHint">Сон вчера → энергия сегодня</p>
       <div class="chart-frame" id="lag-chart"></div>
       <p class="legend sans" id="lag-legend"></p>
       <p class="muted sans" id="lag-note"></p>
@@ -81,26 +98,10 @@
     </section>
 
     <section class="panel dash-panel hidden" id="weight-panel">
-      <h3 data-i18n="an.weightTitle">Вес</h3>
+      <h3 data-i18n="an.weightTitle">Данные по весу (кг) в динамике</h3>
       <p class="muted sans" id="weight-hint"></p>
       <div class="chart-frame" id="weight-chart"></div>
       <p class="fact-line sans" id="weight-pace"></p>
-    </section>
-
-    <section class="panel dash-panel">
-      <h3 data-i18n="diary.stack">Как менялись оценки</h3>
-      <p class="muted sans" data-i18n="diary.stackHint">Четыре главных оценки по дням. Ось всегда 1–10 — так видно, растёт линия или нет.</p>
-      <div class="chart-frame" id="stack-chart"></div>
-      <p class="legend sans" id="stack-legend"></p>
-    </section>
-
-    <section class="panel dash-panel" id="influence-panel">
-      <h3 class="influence-title"><span data-i18n="diary.topOn">Что влияет сильнее всего на</span> <span id="influence-label"></span></h3>
-      <div class="seg log-seg influence-seg no-print" id="influence-target"></div>
-      <p class="muted sans" data-i18n="an.influenceNote">Связь, не причина. Слабые связи не показываем.</p>
-      <div class="chart-frame" id="influence-chart"></div>
-      <p class="muted sans" data-i18n="diary.corrAxis">отрицательная ←  0  → положительная</p>
-      <p id="insight" class="insight"></p>
     </section>
 
     <section class="panel">
