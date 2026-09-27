@@ -5,6 +5,7 @@ window.MITY = {
   whatsapp: "https://wa.me/79958958555",
   email: "smittour@gmail.com",
   instagram: "",
+  metrika: 113097278,
   usdRub: 84.1975,
   families: {
     self: { title: "Пакет «Сам» (без консультаций)", pill: "Без консультаций" },
